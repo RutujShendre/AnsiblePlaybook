@@ -1,0 +1,35 @@
+---
+- hosts: vmubuntu  #group name from the inventory
+ 
+  vars:
+    pack_name: apache2
+    serv_name: apache2
+  
+  tasks:
+    - name: Install {{ pack_name }}
+      apt: name={{ pack_name }} state=installed
+      become: yes
+
+    - name: Start {{ serv_name }}
+      service: name={{ serv_name }} state=started
+      become: yes
+     
+    - name: Check the index file content
+      shell: 'cat /var/www/html/index.html | grep -i "Hello World" | wc -l'
+      register: output_content
+
+    - debug: var=output_content
+      
+    - name: Ensure SELinux is set to enforcing mode
+      lineinfile:
+        path: /var/www/html/index.html
+        regexp: 'Hello World'
+        line: My Name is Rutuj        
+      become: yes
+      when: output_content.stdout != "0" 
+      notify: RESTART HTTPD
+    
+  handlers:
+    - name: RESTART HTTPD
+      service: name={{ serv_name }} state=restarted
+      become: yes

@@ -1,0 +1,7 @@
+# cd /opt/devops/ansible/playbook2.yml
+- name: Execute a date command on localhost
+  hosts: vmubuntu
+  tasks:
+    - name: Execute a date command
+      command: date
+

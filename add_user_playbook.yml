@@ -1,0 +1,13 @@
+---
+- name: rutn the task on ubuntu/trusty
+  hosts: vmubuntu
+  become: yes
+  tasks:
+    - name: Add the user 'rutuj' with a specific uid and a primary group of admin
+      user:
+        name: rutuj
+        comment: Rutuj Shendre
+        uid: 1040 
+        password: 1234
+        group: admin 
+       
